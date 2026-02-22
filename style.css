@@ -1,0 +1,247 @@
+:root { --bg: #050505; --surface: #0f0f0f; --accent: #a371ff; --text: #e0e0e0; --border: #333; --error: #ff4444; --font-main: 'Roboto Mono', monospace; }
+* { box-sizing: border-box; }
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-main);
+    margin: 0;
+    padding: 20px;
+    padding-left: 320px; /* место под сайдбар на ПК */
+    display: flex;
+    justify-content: center;
+}
+.app { width: 100%; max-width: 900px; }
+
+header { border-bottom: 1px solid var(--border); padding-bottom: 20px; margin-bottom: 30px; text-align: center; }
+.logo h1 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin: 0; color: #fff; letter-spacing: 5px; }
+.logo h1 span { color: var(--accent); }
+
+.tabs {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+.tab-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: #666;
+    padding: 12px;
+    cursor: pointer;
+    flex: 1 1 auto;
+    min-width: 120px;
+    font-family: var(--font-main);
+    transition: 0.3s;
+    text-transform: uppercase;
+}
+.tab-btn.active {
+    background: var(--accent);
+    color: #000;
+    font-weight: bold;
+    border-color: var(--accent);
+}
+
+.pane { display: none; }
+.pane.active { display: block; }
+
+.group { margin-bottom: 20px; background: var(--surface); padding: 20px; border: 1px solid var(--border); border-radius: 4px; position: relative; }
+label { display: block; margin-bottom: 10px; color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+
+textarea {
+    width: 100%;
+    background: #000;
+    border: 1px solid #333;
+    color: var(--accent);
+    padding: 12px;
+    font-family: var(--font-main);
+    outline: none;
+    min-height: 120px;
+}
+textarea:disabled { opacity: 0.2; cursor: not-allowed; }
+
+.drop-zone {
+    width: 100%; height: 160px; border: 2px dashed #333; border-radius: 8px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    cursor: pointer; transition: 0.3s; background: #080808; color: #555; position: relative;
+}
+.drop-zone:hover { border-color: #666; color: #888; }
+.drop-zone.drag-over { border-color: var(--accent); background: rgba(163, 113, 255, 0.05); color: var(--accent); }
+.drop-zone.filled { border-style: solid; border-color: var(--accent); color: #fff; }
+.drop-zone.disabled { opacity: 0.1; pointer-events: none; }
+.drop-zone img { max-height: 90%; max-width: 90%; object-fit: contain; }
+
+.btn-action {
+    width: 100%;
+    padding: 18px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-top: 10px;
+    font-family: var(--font-main);
+}
+.btn-action:disabled { background: #222; color: #444; cursor: not-allowed; }
+
+.status-msg { padding: 15px; margin-top: 15px; border-radius: 2px; font-size: 0.85rem; display: none; border: 1px solid transparent; }
+.status-msg.err { background: rgba(255, 68, 68, 0.1); color: var(--error); border-color: var(--error); display: block; }
+.status-msg.ok { background: rgba(163, 113, 255, 0.1); color: var(--accent); border-color: var(--accent); display: block; }
+
+.hidden { display: none !important; }
+
+.copy-btn {
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    font-family: var(--font-main);
+    font-size: 0.8rem;
+    border-radius: 3px;
+}
+.copy-btn:hover { background: #555; }
+
+#preview-container {
+    margin: 10px 0;
+    text-align: center;
+}
+#preview-container img,
+#preview-container video,
+#preview-container audio {
+    max-width: 100%;
+    max-height: 300px;
+    border: 1px solid #333;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+.side-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.side-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.highlight {
+    color: var(--accent);
+    font-weight: bold;
+}
+
+.side-deco {
+    width: 120px;
+    height: auto;
+    align-self: center;
+    margin-top: 20px;
+    opacity: 0.7;
+}
+
+/* Кнопки (круглые) */
+.side-toggle, .tg-button {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: none;
+    color: #000;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    transition: transform 0.2s;
+}
+.side-toggle:hover, .tg-button:hover { transform: scale(1.1); }
+
+.tg-button {
+    background-image: url('tg_icon.png');
+    background-size: 60% 60%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: var(--accent);
+}
+
+/* Мобильные кнопки (контейнер) */
+.mobile-buttons {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1100;
+}
+
+/* По умолчанию показываем десктопную кнопку в сайдбаре, мобильную скрываем */
+.desktop-only { display: flex; }
+.mobile-buttons { display: none; } /* на ПК мобильные кнопки скрыты */
+
+/* Адаптивность для мобильных */
+@media (max-width: 900px) {
+    body { padding-left: 20px; } /* убираем отступ под сайдбар */
+
+    .sidebar {
+        transform: translateX(-100%);
+        width: 85%;
+        max-width: 320px;
+    }
+    .sidebar.active { transform: translateX(0); }
+
+    .desktop-only { display: none; } /* прячем кнопку Telegram внутри сайдбара */
+    .mobile-buttons { display: flex; } /* показываем мобильные кнопки */
+
+    /* Увеличиваем элементы для удобного тыка пальцем */
+    .btn-action {
+        padding: 22px;
+        font-size: 1.2rem;
+        min-height: 60px;
+    }
+    .tab-btn {
+        padding: 16px;
+        font-size: 1rem;
+        min-height: 60px;
+        min-width: 120px;
+    }
+    textarea, .drop-zone {
+        font-size: 16px;
+        min-height: 60px;
+    }
+    .copy-btn {
+        padding: 12px 15px;
+        font-size: 1rem;
+        min-height: 50px;
+    }
+    .drop-zone {
+        height: auto;
+        min-height: 120px;
+    }
+}
+
+/* Стиль скроллбара */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="manifest" href="manifest.json">
+    <meta charset="UTF-8">
+    <title>ATHIRD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- локальное подключение JSZip -->
+    <script src="./jszip.min.js"></script>
+</head>
+<body>
+
+<!-- Кнопки для мобильных (видны только на узких экранах) -->
+<div class="mobile-buttons">
+    <button id="side-toggle" class="side-toggle">i</button>
+    <a href="https://t.me/dranekw_post" target="_blank" class="tg-button" id="tg-mobile"></a>
+</div>
+
+<!-- Боковая панель с инструкцией (на ПК всегда открыта, на мобилках выезжает) -->
+<div class="sidebar" id="sidebar">
+    <div class="side-header">
+        <h3>ИНСТРУКЦИЯ</h3>
+        <!-- Кнопка Telegram для ПК (внутри сайдбара) -->
+        <a href="https://t.me/dranekw_post" target="_blank" class="tg-button desktop-only" id="tg-desktop"></a>
+    </div>
+    <div class="side-content">
+        <p>Привет! Чтобы начать пользоваться программой, вам нужно сгенерировать <span class="highlight">ключ</span> (никнейм не влияет на это, он просто является вашим идентификатором для других и для вас).</p>
+        <p>Программа работает как почтовый ящик: положить вам письмо может кто угодно, а прочитать только вы.</p>
+        <p>Для шифровки сообщений используется <span class="highlight">публичный ключ</span>, вы рассылаете его своим друзьям, они шифруют через него сообщение, а расшифровать вы можете его только с помощью вашего <span class="highlight">приватного</span> ключа.</p>
+        <p>Обязательно передавайте все изображения с зашифрованными внутри данными <span class="highlight">без сжатия</span>, т.е. прикрепляйте как документы или как файл.</p>
+    </div>
+    <img src="cuteguy.png" alt="deco" class="side-deco">
+</div>
+
+<div class="app">
+    <header><div class="logo"><h1><span>A</span>THIRD</h1></div></header>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="keys">1. КЛЮЧИ</button>
+        <button class="tab-btn" data-tab="enc">2. ЗАШИФРОВАТЬ</button>
+        <button class="tab-btn" data-tab="dec">3. РАСШИФРОВАТЬ</button>
+    </div>
+
+    <div id="t-keys" class="pane active">
+        <div class="group">
+            <label>Никнейм для ключа</label>
+            <textarea id="nick" style="min-height:40px" placeholder="Введите никнейм..."></textarea>
+            <button class="btn-action" id="btn-gen-keys">Создать Ключи</button>
+        </div>
+        <div id="keys-out" class="hidden">
+            <div class="group">
+                <label>Публичный ключ (Отправьте это другу)</label>
+                <textarea id="pub-o" readonly></textarea>
+                <button class="copy-btn" data-target="pub-o">Копировать</button>
+            </div>
+            <div class="group">
+                <label style="color:var(--error)">Приватный ключ (Храните в тайне!)</label>
+                <textarea id="priv-o" readonly></textarea>
+                <button class="copy-btn" data-target="priv-o">Копировать</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="t-enc" class="pane">
+        <div class="group">
+            <label>1. Данные (Текст ИЛИ Файл)</label>
+            <textarea id="msg-in" placeholder="Введите текст сообщения..."></textarea>
+            <div style="text-align:center; margin:10px 0; font-size:0.7rem; color:#333">ИЛИ</div>
+            <div class="drop-zone" id="dz-f">
+                <span id="txt-f">ПЕРЕТАЩИТЕ ФАЙЛ</span>
+                <input type="file" id="f-in" class="hidden">
+            </div>
+        </div>
+        <div class="group">
+            <label>2. Ключ получателя (Публичный)</label>
+            <textarea id="target-k" placeholder="Вставьте публичный ключ получателя..."></textarea>
+        </div>
+        <div class="group">
+            <label>3. Картинка-обложка (PNG)</label>
+            <div class="drop-zone" id="dz-c">
+                <span id="txt-c">ВЫБЕРИТЕ ОБЛОЖКУ</span>
+                <img id="prev-c" class="hidden">
+                <input type="file" id="c-in" class="hidden" accept="image/png">
+            </div>
+        </div>
+        <button class="btn-action" id="btn-do-enc">Зашифровать и скачать</button>
+        <div id="st-enc" class="status-msg"></div>
+    </div>
+
+    <div id="t-dec" class="pane">
+        <div class="group">
+            <label>1. Зашифрованный PNG</label>
+            <div class="drop-zone" id="dz-d">
+                <span id="txt-d">ВЫБЕРИТЕ ЗАШИФРОВАННЫЙ ФАЙЛ</span>
+                <img id="prev-d" class="hidden">
+                <input type="file" id="d-in" class="hidden" accept="image/png">
+            </div>
+        </div>
+        <div class="group">
+            <label>2. Ваш Приватный ключ</label>
+            <textarea id="my-k" placeholder="Вставьте ваш приватный ключ..."></textarea>
+        </div>
+        <button class="btn-action" id="btn-do-dec">Расшифровать</button>
+        <div id="st-dec" class="status-msg"></div>
+        
+        <div id="res-box" class="group hidden">
+            <label id="res-name">Результат:</label>
+            <div id="preview-container" class="hidden"></div>
+            <textarea id="res-t" readonly></textarea>
+            <button id="btn-dl" class="btn-action hidden">Скачать файл</button>
+        </div>
+    </div>
+</div>
+
+<canvas id="cvs" class="hidden"></canvas>
+
+<script src="prng.js"></script>
+<script src="stego.js"></script>
+<script src="main.js"></script>
+
+</body>
+</html>
