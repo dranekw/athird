@@ -2,7 +2,7 @@
   "name": "ATHIRD",
   "short_name": "ATHIRD",
   "description": "Encrypt your files and messages into images and share them with your friends freely!",
-  "start_url": "athird.html",
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#050505",
   "theme_color": "#a371ff",
@@ -19,4 +19,5 @@
       "type": "image/png"
     }
   ]
+
 }
