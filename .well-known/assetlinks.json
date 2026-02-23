@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "github.dranekw.athird",
+        "sha256_cert_fingerprints": ["73:8D:52:BC:C2:45:24:93:17:EE:C5:A0:61:D7:8C:C3:40:9E:49:69:AD:DF:5E:10:4F:D6:F9:1C:93:21:3A:1D"]
+      }
+    }]
